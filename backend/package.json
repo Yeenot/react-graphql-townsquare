@@ -1,0 +1,31 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "typeorm": "typeorm-ts-node-esm -d ./src/config/typeorm.config.ts",
+    "migration:generate": "npm run typeorm -- migration:generate",
+    "migration:run": "npm run typeorm -- migration:run",
+    "migration:revert": "npm run typeorm -- migration:revert",
+    "seeder:run": "ts-node src/seeders/index.ts",
+    "start": "ts-node src/server.ts",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "@types/node": "^20.14.11",
+    "apollo-server": "^3.13.0",
+    "dotenv": "^16.4.5",
+    "mysql": "^2.18.1",
+    "reflect-metadata": "^0.2.2",
+    "typescript": "^5.5.3"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typeorm": "^0.3.20"
+  }
+}
