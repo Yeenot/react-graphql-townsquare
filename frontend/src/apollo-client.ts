@@ -3,21 +3,19 @@ import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { createClient } from "graphql-ws";
 
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost";
-const API_PORT = process.env.REACT_APP_API_PORT || 4000;
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:4000";
 const SUBSCRIPTION_URL =
-  process.env.REACT_APP_SUBSCRIPTION_URL || "ws://localhost";
-const SUBSCRIPTION_PORT = process.env.REACT_APP_SUBSCRIPTION_PORT || 4000;
+  process.env.REACT_APP_SUBSCRIPTION_URL || "ws://localhost:4000";
 
 // Set query link
 const httpLink = new HttpLink({
-  uri: `${API_URL}:${API_PORT}/graphql`,
+  uri: `${API_URL}/graphql`,
 });
 
 // Set websocket link
 const wsLink = new GraphQLWsLink(
   createClient({
-    url: `${SUBSCRIPTION_URL}:${SUBSCRIPTION_PORT}/graphql`,
+    url: `${SUBSCRIPTION_URL}/graphql`,
   })
 );
 
