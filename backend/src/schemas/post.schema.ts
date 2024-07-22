@@ -1,20 +1,26 @@
-import { gql } from "apollo-server";
+import { gql } from "apollo-server-express";
 
-// Post's type definitions
+// Post type definitions
 export const postTypeDefs = gql`
-  extend type Post {
+  type Post {
     id: Int
     title: String
     order: Int
+    user: User!
+    category: Category!
     created_at: String
     updated_at: String
   }
 
   extend type Query {
-    getPosts: [Post]
+    posts(offset: Int, limit: Int): [Post]!
   }
 
   extend type Mutation {
-    movePost(id, positionIndex: number): void
+    updatePostOrder(id: Int!, newPositionIndex: Int!): Post
+  }
+
+  extend type Subscription {
+    newPostOrder: Post
   }
 `;
