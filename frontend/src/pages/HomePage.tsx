@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 
 // MUI components
-import { Box } from '@mui/material';
+import { Box, Snackbar } from '@mui/material';
 
 // Custom components
 import DraggableList from '../components/DraggableList/DraggableList';
@@ -21,13 +21,22 @@ import { POST_ORDER_SUBSCRIPTION } from '../queries/posts/post-order-subscriptio
 import { IPost, IPostResponse } from '../entities/Post';
 
 const HomePage: React.FC = () => {
-  const [updatePostOrderPosition] = useMutation(UPDATE_POST_ORDER); 
-  const { loading, data, fetchMore, subscribeToMore } = useQuery<IPostResponse>(GET_POSTS, {
+  const [updatePostOrderPosition, { error: updatePostOrderError }] = useMutation(UPDATE_POST_ORDER); 
+  const { loading, error, data, fetchMore, subscribeToMore } = useQuery<IPostResponse>(GET_POSTS, {
     variables: { offset: 0, limit: 40 }, // Set pagination
     notifyOnNetworkStatusChange: true,
   }); 
 
   const [posts, setPosts] = useState<IPost[]>(data?.posts ?? []);
+  const [snackbarState, setSnackbarState] = useState<{ message: string; open: boolean }>({ message: "Something went wrong.", open: false });
+
+  const showSnackbar = () => {
+    setSnackbarState((state) => ({ ...state, open: true }))
+  };
+
+  const hideSnackbar = () => {
+    setSnackbarState((state) => ({ ...state, open: false }))
+  };
 
   // This function will handle the loading more of posts.
   const onLoadMore = useCallback(() => {
@@ -90,8 +99,17 @@ const HomePage: React.FC = () => {
       newPosts.splice(sourceIndex, 1);
       newPosts.splice(destinationIndex, 0, draggedItem);
       setPosts(newPosts)
+    }).catch(() => {
+      showSnackbar();
     });
+
   }, [updatePostOrderPosition, posts])
+
+  useEffect(() => {
+    if (!!error || !!updatePostOrderError) {
+      showSnackbar();
+    }
+  }, [error, updatePostOrderError])
 
   /**
    * The hook will listen or subscribe if there are any changes in the order position of the posts. If there is,
@@ -123,27 +141,36 @@ const HomePage: React.FC = () => {
   }, [data]);
 
   return (
-    <Box sx={{ textAlign: 'center', paddingBottom: '20px' }}>
-      <h1>Posts</h1>
-      <DraggableList<IPost>
-        id="draggable-list-posts"
-        items={posts}
-        onItemMoved={onDraggableListItemMoved}
-        loading={loading}
-        onLoadMore={onLoadMore}
-        sx={{ width: '70%', margin: '0 auto' }}
-      >
-          {(item, index) => (
-            <PostCard
-              title={item.title}
-              user={item.user}
-              category={item.category}
-              date={item.created_at}
-            >
-            </PostCard>
-          )}
-      </DraggableList>
-    </Box>
+    <>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        autoHideDuration={4000}
+        onClose={hideSnackbar}
+        open={snackbarState.open}
+        message={snackbarState.message}
+      />
+      <Box sx={{ textAlign: 'center', paddingBottom: '20px' }}>
+        <h1>Posts</h1>
+        <DraggableList<IPost>
+          id="draggable-list-posts"
+          items={posts}
+          onItemMoved={onDraggableListItemMoved}
+          loading={loading}
+          onLoadMore={onLoadMore}
+          sx={{ width: '70%', margin: '0 auto' }}
+        >
+            {(item, index) => (
+              <PostCard
+                title={item.title}
+                user={item.user}
+                category={item.category}
+                date={item.created_at}
+              >
+              </PostCard>
+            )}
+        </DraggableList>
+      </Box>
+    </>
   );
 };
 

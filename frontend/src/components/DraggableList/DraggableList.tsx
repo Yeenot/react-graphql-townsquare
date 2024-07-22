@@ -100,7 +100,7 @@ const DraggableList = <T,>({ id, children, items, loading, onLoadMore, onItemMov
   if ((!_items || _items.length === 0) && !loading) {
     return (
       <Box sx={{ textAlign: 'center' }}>
-        <Typography component="div">Empty</Typography>
+        <Typography component="div">No data</Typography>
       </Box>
     );
   }
