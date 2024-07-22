@@ -1,22 +1,22 @@
 import ReactDOM from 'react-dom/client';
-import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
-import './index.css';
+import { ApolloProvider } from '@apollo/client';
+
+import { ThemeProvider } from '@mui/material/styles';
+
 import App from './App';
+import apolloClient from './apollo-client';
+import theme from './theme';
+
 import reportWebVitals from './reportWebVitals';
 
-const client = new ApolloClient({
-  uri: 'http://localhost:4000',
-  cache: new InMemoryCache(),
-});
-
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 root.render(
-  <ApolloProvider client={client}>
-    <App />
-  </ApolloProvider>,
+  <ApolloProvider client={apolloClient}>
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
+  </ApolloProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function
