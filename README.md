@@ -1,6 +1,6 @@
 # Project Overview
 
-Link: [React GraphQL Town Square App](https://react-graphql-townsquare-app.vercel.app/)
+Link: [React GraphQL Town Square App](https://react-graphql-townsquare-app.vercel.app/ - Not working anymore due to free server domain.)
 
 A full-stack application that displays list of posts and has a capability to reorder persistently via drag and drop.
 The application supports infinite scrolling and real-time updates to improve user experience performance.
